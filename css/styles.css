@@ -31,31 +31,42 @@ nav {
   position: fixed; inset: 0 0 auto; z-index: 1000;
   background: rgba(7,40,64,.96); backdrop-filter: blur(12px);
   display: flex; align-items: center; justify-content: center;
-  padding: 0 2.5rem; height: 68px;
+  padding: 0 2rem; height: 68px;
   border-bottom: 1px solid rgba(200,168,75,.3);
 }
 .nav-logo { display: none; }
+.nav-right { display: none; }
+#nav-admin-btn { display: none; }
 .nav-links {
-  display: flex; gap: 0; list-style: none;
-  width: 100%; justify-content: space-around;
+  display: flex;
+  list-style: none;
+  margin: 0; padding: 0;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
 }
+.nav-links li { flex: 1; text-align: center; }
 .nav-links a {
-  color: rgba(255,255,255,.9); text-decoration: none;
-  font-size: 1.2rem; font-weight: 700;
-  letter-spacing: .1em; text-transform: uppercase;
+  display: inline-block;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 6px 0;
   transition: color .2s;
-  position: relative; padding-bottom: 4px;
+  position: relative;
 }
 .nav-links a::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
+  content: "";
+  position: absolute; bottom: 0; left: 10%; right: 10%;
   height: 2px; background: var(--gold);
-  transform: scaleX(0); transition: transform .2s;
+  transform: scaleX(0); transition: transform .25s;
+  border-radius: 2px;
 }
 .nav-links a:hover { color: var(--gold); }
 .nav-links a:hover::after { transform: scaleX(1); }
-.nav-right { display: none; }
-#nav-admin-btn { display: none; }
 
 /* ── HERO ─────────────────────────────────────────────────────────────────── */
 #hero {
@@ -313,11 +324,66 @@ footer strong { color:var(--gold); }
   .form-row { grid-template-columns:1fr; }
 }
 @media(max-width:600px) {
-  nav { padding:0 1.2rem; grid-template-columns:1fr auto; }
-  .nav-links { display:none; }
-  .nav-right { display:none; }
+  /* Nav becomes hamburger on mobile */
+  nav {
+    padding: 0 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+  }
+  /* Hamburger button */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 6px;
+    z-index: 1001;
+  }
+  .hamburger span {
+    display: block;
+    width: 26px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  /* Nav links become a dropdown */
+  .nav-links {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed;
+    top: 68px;
+    left: 0; right: 0;
+    background: rgba(7,40,64,.98);
+    padding: 1rem 0 1.5rem;
+    gap: 0;
+    transform: translateY(-120%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 999;
+    border-bottom: 2px solid rgba(200,168,75,.4);
+  }
+  .nav-links.open {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .nav-links li { flex: none; text-align: center; }
+  .nav-links a {
+    display: block;
+    padding: 1rem 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
   section { padding:60px 1.2rem; }
-  #hero { padding:90px 1.2rem 50px; }
+  #hero { padding:100px 1.2rem 50px; }
   .hero-stats { gap:1.5rem; }
   .admin-panel { margin:1rem; border-radius:10px; }
+}
+/* Hide hamburger on desktop */
+@media(min-width:601px) {
+  .hamburger { display: none; }
 }
