@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Management — Secure</title>
+  <!-- No description meta tag — keeps this page off search engines -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Admin page body ── */
+    body { background:#0d2035; min-height:100vh; }
+
+    /* ── Login screen ── */
+    #login-screen {
+      display:flex; align-items:center; justify-content:center;
+      min-height:100vh; padding:2rem;
+    }
+    .login-card {
+      background:#fff; border-radius:16px; padding:2.8rem;
+      width:100%; max-width:400px;
+      box-shadow:0 24px 80px rgba(0,0,0,.5);
+    }
+    .login-card .lock-icon {
+      width:60px; height:60px; background:var(--blue-50);
+      border-radius:50%; display:flex; align-items:center;
+      justify-content:center; margin:0 auto 1.5rem; font-size:1.8rem;
+    }
+    .login-card h2 {
+      font-family:'Playfair Display',serif; font-size:1.5rem;
+      color:var(--blue-900); text-align:center; margin-bottom:.3rem;
+    }
+    .login-card p { color:var(--txt-mute); font-size:.88rem; text-align:center; margin-bottom:1.8rem; }
+    .login-card input {
+      width:100%; border:1px solid var(--border); border-radius:8px;
+      padding:.75rem 1rem; font-family:'Source Sans 3',sans-serif;
+      font-size:.95rem; margin-bottom:1rem; color:var(--txt-dark);
+    }
+    .login-card input:focus { outline:none; border-color:var(--blue-400); }
+    .login-card .login-btn {
+      width:100%; background:var(--blue-600); color:#fff;
+      border:none; padding:.85rem; border-radius:8px;
+      font-family:'Source Sans 3',sans-serif; font-size:1rem;
+      font-weight:600; cursor:pointer; transition:background .2s;
+    }
+    .login-card .login-btn:hover { background:var(--blue-800); }
+    .login-card .err {
+      background:#fdf0f0; border:1px solid #f5c6c6;
+      color:#a32d2d; border-radius:6px; padding:.65rem 1rem;
+      font-size:.85rem; margin-top:.8rem; display:none; text-align:center;
+    }
+    .back-link { display:block; text-align:center; margin-top:1.2rem; color:var(--txt-mute); font-size:.82rem; text-decoration:none; }
+    .back-link:hover { color:var(--blue-600); }
+
+    /* ── Admin dashboard ── */
+    #admin-screen { display:none; }
+    .admin-topbar {
+      background:var(--blue-900);
+      border-bottom:1px solid rgba(200,168,75,.3);
+      padding:0 2rem; height:64px;
+      display:flex; align-items:center; justify-content:space-between;
+      position:sticky; top:0; z-index:100;
+    }
+    .admin-topbar .brand {
+      font-family:'Playfair Display',serif; color:var(--gold);
+      font-size:1.1rem; font-weight:700;
+    }
+    .admin-topbar .brand span { color:rgba(255,255,255,.5); font-size:.8rem; font-family:'Source Sans 3',sans-serif; font-weight:400; margin-left:.5rem; }
+    .topbar-right { display:flex; gap:1rem; align-items:center; }
+    .view-site-btn {
+      background:rgba(200,168,75,.15); border:1px solid rgba(200,168,75,.4);
+      color:var(--gold); padding:.38rem 1rem; border-radius:4px;
+      font-size:.82rem; font-weight:600; text-decoration:none;
+      font-family:'Source Sans 3',sans-serif; transition:.2s;
+    }
+    .view-site-btn:hover { background:rgba(200,168,75,.25); }
+    .logout-btn {
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+      color:rgba(255,255,255,.8); padding:.38rem 1rem; border-radius:4px;
+      font-size:.82rem; cursor:pointer; font-family:'Source Sans 3',sans-serif;
+    }
+    .logout-btn:hover { background:rgba(255,255,255,.2); }
+
+    /* ── Dashboard layout ── */
+    .dashboard { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem; }
+    .dash-welcome {
+      background:linear-gradient(135deg,var(--blue-800),var(--blue-600));
+      border-radius:12px; padding:1.8rem 2rem; margin-bottom:2rem;
+      display:flex; align-items:center; gap:1.5rem;
+    }
+    .dash-welcome .welcome-icon { font-size:2.5rem; }
+    .dash-welcome h2 { font-family:'Playfair Display',serif; color:#fff; font-size:1.3rem; margin-bottom:.2rem; }
+    .dash-welcome p { color:rgba(197,227,248,.8); font-size:.88rem; }
+
+    /* ── Stats row ── */
+    .dash-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2rem; }
+    .stat-card {
+      background:#fff; border:1px solid var(--border); border-radius:10px;
+      padding:1.2rem 1.5rem; text-align:center;
+    }
+    .stat-card .s-num { font-family:'Playfair Display',serif; font-size:2rem; color:var(--blue-600); font-weight:700; }
+    .stat-card .s-lbl { color:var(--txt-mute); font-size:.8rem; margin-top:.2rem; }
+
+    /* ── Section cards ── */
+    .dash-section {
+      background:#fff; border:1px solid var(--border);
+      border-radius:12px; overflow:hidden; margin-bottom:1.5rem;
+    }
+    .dash-section-header {
+      background:var(--blue-50); border-bottom:1px solid var(--border);
+      padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between;
+    }
+    .dash-section-header h3 { font-size:1rem; font-weight:600; color:var(--blue-900); }
+    .dash-section-body { padding:1.5rem; }
+
+    /* ── Tabs ── */
+    .proj-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:1.5rem; }
+    .proj-tab {
+      background:none; border:none; padding:.6rem 1.2rem;
+      font-family:'Source Sans 3',sans-serif; font-size:.85rem;
+      color:var(--txt-mute); cursor:pointer;
+      border-bottom:2px solid transparent; margin-bottom:-1px; transition:.2s;
+    }
+    .proj-tab.active { color:var(--blue-600); border-bottom-color:var(--blue-600); font-weight:600; }
+    .proj-pane { display:none; }
+    .proj-pane.active { display:block; }
+
+    /* ── Form styles ── */
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+    .form-group { margin-bottom:1rem; }
+    .form-group label { display:block; font-size:.78rem; font-weight:600; color:var(--txt-mid); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.35rem; }
+    .form-group input, .form-group textarea, .form-group select {
+      width:100%; border:1px solid var(--border); border-radius:6px;
+      padding:.65rem .9rem; font-family:'Source Sans 3',sans-serif;
+      font-size:.9rem; color:var(--txt-dark); background:#fff; transition:.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline:none; border-color:var(--blue-400); box-shadow:0 0 0 3px rgba(58,159,214,.1); }
+    .form-group textarea { min-height:90px; resize:vertical; }
+    .save-btn {
+      background:var(--blue-600); color:#fff; border:none;
+      padding:.75rem 2rem; border-radius:6px;
+      font-family:'Source Sans 3',sans-serif; font-size:.95rem;
+      font-weight:600; cursor:pointer; width:100%; margin-top:.5rem;
+      transition:background .2s;
+    }
+    .save-btn:hover { background:var(--blue-800); }
+
+    /* ── Image upload ── */
+    .img-upload-area {
+      border:2px dashed var(--border); border-radius:8px; padding:1.5rem;
+      text-align:center; cursor:pointer; transition:.2s;
+    }
+    .img-upload-area:hover { border-color:var(--blue-400); background:var(--blue-50); }
+    .img-upload-area p { color:var(--txt-mute); font-size:.85rem; margin:0; }
+    .img-preview-list { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.8rem; }
+    .img-preview-item { position:relative; }
+    .img-preview-item img { width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border); display:block; }
+    .remove-img {
+      position:absolute; top:-6px; right:-6px; width:18px; height:18px;
+      background:#e24b4a; border:none; border-radius:50%;
+      color:#fff; font-size:.65rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    /* ── Project list ── */
+    .project-list-item {
+      display:flex; align-items:center; gap:.8rem;
+      padding:.8rem; border:1px solid var(--border);
+      border-radius:8px; margin-bottom:.6rem; background:var(--blue-50);
+      transition:box-shadow .2s;
+    }
+    .project-list-item:hover { box-shadow:var(--shadow); }
+    .pli-thumb { width:50px; height:40px; border-radius:5px; overflow:hidden; background:var(--blue-200); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem; }
+    .pli-thumb img { width:100%; height:100%; object-fit:cover; }
+    .pli-name { flex:1; font-size:.9rem; font-weight:500; color:var(--blue-800); }
+    .pli-badge { font-size:.7rem; padding:.2rem .6rem; border-radius:3px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; flex-shrink:0; }
+    .pli-badge.national { background:var(--gold-lt); color:var(--blue-900); }
+    .pli-badge.county   { background:var(--blue-100); color:var(--blue-800); }
+    .pli-edit-btn { background:none; border:1px solid var(--blue-400); border-radius:4px; padding:.3rem .7rem; color:var(--blue-600); font-size:.78rem; cursor:pointer; transition:.2s; }
+    .pli-edit-btn:hover { background:var(--blue-50); }
+    .pli-del-btn  { background:none; border:1px solid #f09595; border-radius:4px; padding:.3rem .7rem; color:#a32d2d; font-size:.78rem; cursor:pointer; }
+    .pli-del-btn:hover { background:#fcebeb; }
+
+    /* ── Edit modal ── */
+    #edit-modal-overlay {
+      display:none; position:fixed; inset:0; z-index:10000;
+      background:rgba(0,0,0,.75); overflow-y:auto;
+    }
+    #edit-modal-overlay.open { display:block; }
+    .edit-modal { background:#fff; max-width:680px; margin:2.5rem auto; border-radius:14px; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,.45); }
+    .edit-modal-header { background:var(--blue-800); padding:1.2rem 1.8rem; display:flex; align-items:center; justify-content:space-between; }
+    .edit-modal-header h3 { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.1rem; }
+    .modal-close { background:none; border:none; color:rgba(255,255,255,.6); font-size:1.4rem; cursor:pointer; line-height:1; }
+    .modal-close:hover { color:#fff; }
+    .edit-modal-body { padding:1.8rem; }
+    .existing-imgs-label { font-size:.78rem; font-weight:600; color:var(--txt-mid); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem; display:block; }
+    #edit-existing-imgs { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; min-height:30px; }
+
+    /* ── CV / Photo panes ── */
+    .cv-current-wrap { display:none; align-items:center; gap:1rem; background:var(--blue-50); border:1px solid var(--border); border-radius:8px; padding:.9rem 1.1rem; margin-bottom:1rem; }
+    .cv-icon { font-size:1.6rem; }
+    .cv-info { flex:1; }
+    .cv-name { font-size:.88rem; font-weight:600; color:var(--blue-800); }
+    .cv-hint { font-size:.75rem; color:var(--txt-mute); }
+    .cv-del-btn { background:none; border:1px solid #f09595; border-radius:4px; padding:.3rem .7rem; color:#a32d2d; font-size:.78rem; cursor:pointer; }
+    .cv-del-btn:hover { background:#fcebeb; }
+
+    /* ── Feedback ── */
+    .feedback-ok  { color:#0f6e56; font-weight:600; font-size:.88rem; text-align:center; margin-top:.6rem; display:block; }
+    .feedback-err { color:#a32d2d; font-weight:600; font-size:.88rem; text-align:center; margin-top:.6rem; display:block; }
+
+    @media(max-width:650px) {
+      .form-row { grid-template-columns:1fr; }
+      .dash-stats { grid-template-columns:1fr 1fr; }
+      .admin-topbar { padding:0 1rem; }
+      .dashboard { padding:1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     LOGIN SCREEN
+═══════════════════════════════════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="lock-icon">🔐</div>
+    <h2>Secure Admin Access</h2>
+    <p>This area is restricted to authorised site administrators only.</p>
+    <input type="password" id="admin-pw" placeholder="Enter admin password" autocomplete="current-password">
+    <button class="login-btn" onclick="doAdminLogin()">Access Dashboard</button>
+    <div class="err" id="admin-err">Incorrect password. Access denied.</div>
+    <a href="index.html" class="back-link">← Return to public site</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     ADMIN DASHBOARD
+═══════════════════════════════════════════════════════════════════════════ -->
+<div id="admin-screen">
+
+  <!-- Top bar -->
+  <div class="admin-topbar">
+    <div class="brand">⚙ Site Admin <span>Eng. Samuel Alima Portfolio</span></div>
+    <div class="topbar-right">
+      <a href="index.html" target="_blank" class="view-site-btn">👁 View Live Site</a>
+      <button class="logout-btn" onclick="doAdminLogout()">Log Out</button>
+    </div>
+  </div>
+
+  <div class="dashboard">
+
+    <!-- Welcome banner -->
+    <div class="dash-welcome">
+      <div class="welcome-icon">👋</div>
+      <div>
+        <h2>Welcome, Admin</h2>
+        <p>Manage projects, upload photos, update the CV and control all site content from here. Changes take effect on the public site instantly.</p>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-stats">
+      <div class="stat-card"><div class="s-num" id="d-stat-total">0</div><div class="s-lbl">Total Projects</div></div>
+      <div class="stat-card"><div class="s-num" id="d-stat-national">0</div><div class="s-lbl">National Projects</div></div>
+      <div class="stat-card"><div class="s-num" id="d-stat-county">0</div><div class="s-lbl">County Projects</div></div>
+    </div>
+
+    <!-- Projects section -->
+    <div class="dash-section">
+      <div class="dash-section-header">
+        <h3>📁 Projects</h3>
+      </div>
+      <div class="dash-section-body">
+        <div class="proj-tabs">
+          <button class="proj-tab active" data-tab="add"    onclick="switchProjTab('add')">➕ Add New Project</button>
+          <button class="proj-tab"        data-tab="manage" onclick="switchProjTab('manage')">📋 All Projects</button>
+        </div>
+
+        <!-- ADD PROJECT -->
+        <div class="proj-pane active" id="ptab-add">
+          <div class="form-row">
+            <div class="form-group"><label>Project Name *</label><input type="text" id="proj-name" placeholder="e.g. Thwake Dam Project"></div>
+            <div class="form-group"><label>Level *</label><select id="proj-level"><option value="national">National</option><option value="county">County Level</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>County / Region</label><input type="text" id="proj-county" placeholder="e.g. Makueni / Countrywide"></div>
+            <div class="form-group"><label>Year</label><input type="text" id="proj-year" placeholder="e.g. 2023–2025"></div>
+          </div>
+          <div class="form-group"><label>Description *</label><textarea id="proj-desc" placeholder="Describe the project scope, beneficiaries, and impact…"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Budget (KES)</label><input type="text" id="proj-budget" placeholder="e.g. KES 2.4 Billion"></div>
+            <div class="form-group"><label>Status</label><select id="proj-status"><option value="Completed">Completed</option><option value="Ongoing">Ongoing</option><option value="Planning">Planning</option></select></div>
+          </div>
+          <div class="form-group">
+            <label>Project Photos <span style="font-weight:400;color:var(--txt-mute);">(optional — add later via Edit)</span></label>
+            <div class="img-upload-area" onclick="document.getElementById('proj-imgs').click()">
+              <input type="file" id="proj-imgs" accept="image/*" multiple onchange="previewAddImages(event)" style="display:none;">
+              <p>📷 Click to upload project photos (up to 10)</p>
+            </div>
+            <div class="img-preview-list" id="proj-img-previews"></div>
+          </div>
+          <button class="save-btn" id="add-proj-btn" onclick="addProject()">✚ Add Project to Portfolio</button>
+          <div id="add-proj-feedback" style="display:none;margin-top:.8rem;"></div>
+        </div>
+
+        <!-- MANAGE PROJECTS -->
+        <div class="proj-pane" id="ptab-manage">
+          <div id="proj-manage-list"></div>
+          <p id="no-proj-msg" style="color:var(--txt-mute);text-align:center;padding:2rem;display:none;">No projects yet. Add one using the Add New Project tab.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CV section -->
+    <div class="dash-section">
+      <div class="dash-section-header"><h3>📄 CV Management</h3></div>
+      <div class="dash-section-body">
+        <p style="color:var(--txt-mid);font-size:.9rem;margin-bottom:1rem;">Upload Eng. Alima's CV as a PDF. The <strong>Download Full CV</strong> button on the public site will activate automatically.</p>
+        <div class="cv-current-wrap" id="cv-current-wrap">
+          <div class="cv-icon">📄</div>
+          <div class="cv-info"><div class="cv-name" id="cv-filename">CV File</div><div class="cv-hint">Active — visitors can download this from the public site</div></div>
+          <button class="cv-del-btn" onclick="deleteCV()">🗑 Remove</button>
+        </div>
+        <div class="img-upload-area" onclick="document.getElementById('cv-input').click()" style="border-color:var(--blue-200);">
+          <input type="file" id="cv-input" accept="application/pdf" onchange="uploadCV(event)" style="display:none;">
+          <p>📄 Click to upload CV (PDF only, max 10 MB)</p>
+        </div>
+        <div id="cv-feedback" style="display:none;margin-top:.8rem;text-align:center;font-size:.9rem;font-weight:600;"></div>
+      </div>
+    </div>
+
+    <!-- Profile photo section -->
+    <div class="dash-section">
+      <div class="dash-section-header"><h3>📷 Profile Photo</h3></div>
+      <div class="dash-section-body">
+        <p style="color:var(--txt-mid);font-size:.9rem;margin-bottom:1rem;">Upload an official portrait. Displays in the hero section of the public homepage.</p>
+        <div style="display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <div class="img-upload-area" onclick="document.getElementById('photo-input').click()">
+              <input type="file" id="photo-input" accept="image/*" onchange="uploadPhoto(event)" style="display:none;">
+              <p>📷 Click to upload portrait (JPG / PNG / WEBP)</p>
+            </div>
+            <div id="photo-feedback" style="display:none;margin-top:.8rem;text-align:center;font-size:.9rem;font-weight:600;"></div>
+          </div>
+          <div id="photo-preview-wrap" style="display:none;text-align:center;">
+            <img id="photo-preview" src="" alt="Current photo" style="width:130px;height:150px;object-fit:cover;border-radius:8px;border:2px solid var(--border);">
+            <p style="color:#0f6e56;font-size:.8rem;font-weight:600;margin-top:.5rem;">✓ Live on homepage</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /dashboard -->
+</div><!-- /admin-screen -->
+
+<!-- ── EDIT PROJECT MODAL ──────────────────────────────────────────────────── -->
+<div id="edit-modal-overlay">
+  <div class="edit-modal">
+    <div class="edit-modal-header">
+      <h3>✏ Edit Project</h3>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Project Name *</label><input type="text" id="edit-name"></div>
+        <div class="form-group"><label>Level *</label><select id="edit-level"><option value="national">National</option><option value="county">County Level</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>County / Region</label><input type="text" id="edit-county"></div>
+        <div class="form-group"><label>Year</label><input type="text" id="edit-year"></div>
+      </div>
+      <div class="form-group"><label>Description *</label><textarea id="edit-desc"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Budget (KES)</label><input type="text" id="edit-budget"></div>
+        <div class="form-group"><label>Status</label><select id="edit-status"><option value="Completed">Completed</option><option value="Ongoing">Ongoing</option><option value="Planning">Planning</option></select></div>
+      </div>
+      <div class="form-group">
+        <span class="existing-imgs-label">Current Photos <span style="font-weight:400;color:var(--txt-mute);">(✕ removes a photo)</span></span>
+        <div id="edit-existing-imgs"></div>
+      </div>
+      <div class="form-group">
+        <label>Add New Photos</label>
+        <div class="img-upload-area" onclick="document.getElementById('edit-imgs').click()">
+          <input type="file" id="edit-imgs" accept="image/*" multiple onchange="previewEditImages(event)" style="display:none;">
+          <p>📷 Click to upload additional photos</p>
+        </div>
+        <div class="img-preview-list" id="edit-new-previews"></div>
+      </div>
+      <button class="save-btn" id="save-edit-btn" onclick="saveEdit()">💾 Save Changes</button>
+      <div id="edit-feedback" style="display:none;margin-top:.8rem;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
