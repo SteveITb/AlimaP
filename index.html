@@ -17,15 +17,16 @@
 
 <!-- ── NAVIGATION — no admin button ────────────────────────────────────────── -->
 <nav>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#cv">CV</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#about"    onclick="closeMenu()">About</a></li>
+    <li><a href="#cv"       onclick="closeMenu()">CV</a></li>
+    <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
+    <li><a href="#contact"  onclick="closeMenu()">Contact</a></li>
   </ul>
 </nav>
-
-
 
 <!-- ── HERO ────────────────────────────────────────────────────────────────── -->
 <section id="hero">
@@ -72,7 +73,7 @@
         <p>His mandate encompasses policy formulation, oversight of major infrastructure projects, coordination with county governments, and implementation of Kenya's Water Security agenda in alignment with Vision 2030 and the Big Four Agenda.</p>
         <p>A registered engineer with a distinguished academic background, Eng. Alima has led transformative interventions in water supply, irrigation, and sanitation across Kenya — from arid and semi-arid regions to rapidly urbanising counties.</p>
         <div class="about-details">
-          <div class="detail-card"><div class="label">Title</div><div class="value">Water Secretary</div></div>
+          <div class="detail-card"><div class="label">Title</div><div class="value">Principal Secretary</div></div>
           <div class="detail-card"><div class="label">Ministry</div><div class="value">Water &amp; Sanitation</div></div>
           <div class="detail-card"><div class="label">Government</div><div class="value">Republic of Kenya</div></div>
           <div class="detail-card"><div class="label">Profession</div><div class="value">Civil / Water Engineer</div></div>
@@ -224,5 +225,34 @@
 </footer>
 
 <script src="js/public.js"></script>
+<script>
+function toggleMenu() {
+  const nav   = document.getElementById('nav-links');
+  const btn   = document.getElementById('hamburger');
+  const open  = nav.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+  // Animate hamburger to X
+  const spans = btn.querySelectorAll('span');
+  if (open) {
+    spans[0].style.cssText = 'transform:rotate(45deg) translate(5px,6px)';
+    spans[1].style.cssText = 'opacity:0';
+    spans[2].style.cssText = 'transform:rotate(-45deg) translate(5px,-6px)';
+  } else {
+    spans.forEach(s => s.style.cssText = '');
+  }
+}
+function closeMenu() {
+  const nav = document.getElementById('nav-links');
+  const btn = document.getElementById('hamburger');
+  nav.classList.remove('open');
+  btn.querySelectorAll('span').forEach(s => s.style.cssText = '');
+}
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('nav-links');
+  const btn = document.getElementById('hamburger');
+  if (!nav.contains(e.target) && !btn.contains(e.target)) closeMenu();
+});
+</script>
 </body>
 </html>
