@@ -6,11 +6,59 @@
   <title>Eng. Samuel Alima – Principal Secretary, Ministry of Water</title>
   <meta name="description" content="Official portfolio of Engineer Samuel Alima, Principal Secretary for Water and Sanitation, Republic of Kenya.">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .card-admin-btns{display:flex;gap:.6rem;margin-top:.8rem;}
+    .card-edit-btn{background:none;border:1px solid var(--blue-400);border-radius:4px;padding:.3rem .8rem;color:var(--blue-600);font-size:.78rem;cursor:pointer;transition:.2s;font-family:'Source Sans 3',sans-serif;}
+    .card-edit-btn:hover{background:var(--blue-50);}
+    .card-delete-btn{background:none;border:1px solid #f09595;border-radius:4px;padding:.3rem .8rem;color:#a32d2d;font-size:.78rem;cursor:pointer;transition:.2s;font-family:'Source Sans 3',sans-serif;}
+    .card-delete-btn:hover{background:#fcebeb;}
+    .project-list-item{display:flex;align-items:center;gap:.8rem;padding:.7rem;border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;background:var(--blue-50);}
+    .pli-thumb{width:44px;height:36px;border-radius:4px;overflow:hidden;background:var(--blue-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;}
+    .pli-thumb img{width:100%;height:100%;object-fit:cover;}
+    .pli-name{flex:1;font-size:.88rem;font-weight:500;color:var(--blue-800);}
+    .pli-badge{font-size:.7rem;padding:.2rem .55rem;border-radius:3px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0;}
+    .pli-badge.national{background:var(--gold-lt);color:var(--blue-900);}
+    .pli-badge.county{background:var(--blue-100);color:var(--blue-800);}
+    .pli-edit-btn{background:none;border:1px solid var(--blue-400);border-radius:4px;padding:.28rem .65rem;color:var(--blue-600);font-size:.75rem;cursor:pointer;white-space:nowrap;}
+    .pli-del-btn{background:none;border:1px solid #f09595;border-radius:4px;padding:.28rem .65rem;color:#a32d2d;font-size:.78rem;cursor:pointer;}
+    .pli-del-btn:hover{background:#fcebeb;}
+    #edit-modal-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.75);overflow-y:auto;}
+    #edit-modal-overlay.open{display:block;}
+    .edit-modal{background:#fff;max-width:680px;margin:2.5rem auto;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.45);}
+    .edit-modal-header{background:var(--blue-800);padding:1.3rem 1.8rem;display:flex;align-items:center;justify-content:space-between;}
+    .edit-modal-header h3{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.15rem;}
+    .modal-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.4rem;cursor:pointer;}
+    .modal-close:hover{color:#fff;}
+    .edit-modal-body{padding:1.8rem;}
+    .existing-imgs-label{font-size:.8rem;font-weight:600;color:var(--txt-mid);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;display:block;}
+    #edit-existing-imgs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;min-height:40px;}
+    .admin-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto;}
+    .admin-tab{background:none;border:none;padding:.6rem 1rem;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:var(--txt-mute);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.2s;white-space:nowrap;}
+    .admin-tab.active{color:var(--blue-600);border-bottom-color:var(--blue-600);font-weight:600;}
+    .admin-pane{display:none;}
+    .admin-pane.active{display:block;}
+    .cv-current-wrap{display:none;align-items:center;gap:1rem;background:var(--blue-50);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:1rem;}
+    .cv-icon{font-size:1.6rem;}
+    .cv-name{font-size:.88rem;font-weight:600;color:var(--blue-800);}
+    .cv-hint{font-size:.75rem;color:var(--txt-mute);}
+    .cv-info{flex:1;}
+    .cv-del-btn{background:none;border:1px solid #f09595;border-radius:4px;padding:.3rem .7rem;color:#a32d2d;font-size:.78rem;cursor:pointer;}
+    .cv-del-btn:hover{background:#fcebeb;}
+    .feedback-ok{color:#0f6e56;font-weight:600;font-size:.88rem;text-align:center;display:block;margin-top:.6rem;}
+    .feedback-err{color:#a32d2d;font-weight:600;font-size:.88rem;text-align:center;display:block;margin-top:.6rem;}
+    .admin-header-right{display:flex;gap:.8rem;align-items:center;}
+    .logout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:.3rem .8rem;border-radius:4px;font-size:.8rem;cursor:pointer;font-family:'Source Sans 3',sans-serif;}
+    .logout-btn:hover{background:rgba(255,255,255,.2);}
+    .no-projects{grid-column:1/-1;text-align:center;padding:4rem;color:var(--txt-mute);}
+    .status-done{color:#0f6e56!important;font-weight:600;}
+    .status-active{color:#185fa5!important;font-weight:600;}
+    .status-plan{color:#854f0b!important;font-weight:600;}
+  </style>
 </head>
 <body>
 
-<!-- ── NAVIGATION ──────────────────────────────────────────────────────────── -->
 <nav>
+  <div class="nav-logo">Eng. S. Alima</div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#cv">CV</a></li>
@@ -20,7 +68,6 @@
   <button id="nav-admin-btn">Admin Login</button>
 </nav>
 
-<!-- ── HERO ────────────────────────────────────────────────────────────────── -->
 <section id="hero">
   <div class="hero-content">
     <div class="hero-text">
@@ -28,46 +75,31 @@
       <div class="title-role">Principal Secretary — Water &amp; Sanitation | Republic of Kenya</div>
       <p class="bio">A seasoned water resources engineer and public administrator dedicated to transforming Kenya's water infrastructure through evidence-based policy, strategic investment, and inclusive community development.</p>
       <div class="hero-stats">
-        <div class="stat-item">
-          <div class="num" id="stat-projects">0</div>
-          <div class="lbl">Projects Tracked</div>
-        </div>
-        <div class="stat-item">
-          <div class="num">47</div>
-          <div class="lbl">Counties Reached</div>
-        </div>
-        <div class="stat-item">
-          <div class="num">20+</div>
-          <div class="lbl">Years Experience</div>
-        </div>
+        <div class="stat-item"><div class="num" id="stat-projects">0</div><div class="lbl">Projects Tracked</div></div>
+        <div class="stat-item"><div class="num">47</div><div class="lbl">Counties Reached</div></div>
+        <div class="stat-item"><div class="num">20+</div><div class="lbl">Years Experience</div></div>
       </div>
       <div class="hero-ctas">
         <a href="#projects" class="btn-primary">View Projects</a>
         <a href="#cv" class="btn-outline">View CV</a>
       </div>
     </div>
-
-    <!-- Profile photo -->
     <div class="hero-photo-wrap">
       <div class="hero-photo-frame">
         <div class="photo-inner">
           <div class="photo-placeholder" id="photo-placeholder">
             <div class="avatar-icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
             </div>
             <p>Photo not uploaded yet</p>
           </div>
-          <img id="hero-photo-img" src="" alt="Eng. Samuel Alima"
-               style="display:none; width:100%; height:100%; object-fit:cover;">
+          <img id="hero-photo-img" src="" alt="Eng. Samuel Alima" style="display:none;width:100%;height:100%;object-fit:cover;">
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── ABOUT ───────────────────────────────────────────────────────────────── -->
 <section id="about">
   <div class="section-inner">
     <div class="about-grid">
@@ -86,7 +118,7 @@
       </div>
       <div class="about-sidebar">
         <span class="section-tag">Core Expertise</span>
-        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--blue-900);margin-bottom:1rem;margin-top:0.4rem;">Technical &amp; Policy Areas</h3>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--blue-900);margin-bottom:1rem;margin-top:.4rem;">Technical &amp; Policy Areas</h3>
         <ul class="expertise-list">
           <li>Water Resources Management &amp; Hydrological Studies</li>
           <li>Large-Scale Dam &amp; Reservoir Engineering</li>
@@ -104,7 +136,6 @@
   </div>
 </section>
 
-<!-- ── CV ──────────────────────────────────────────────────────────────────── -->
 <section id="cv">
   <div class="section-inner">
     <span class="section-tag">Curriculum Vitae</span>
@@ -123,13 +154,13 @@
           <div class="period">2017 – 2022</div>
           <div class="role">Director of Water Resources</div>
           <div class="org">Ministry of Water &amp; Sanitation, Kenya</div>
-          <div class="desc">Led the national water resources assessment and management division; oversaw gazetted water catchments and flow monitoring.</div>
+          <div class="desc">Led the national water resources assessment division; oversaw gazetted water catchments and flow monitoring nationwide.</div>
         </div>
         <div class="timeline-item">
           <div class="period">2012 – 2017</div>
           <div class="role">Chief Engineer – Infrastructure</div>
           <div class="org">Water Services Trust Fund (WSTF)</div>
-          <div class="desc">Managed portfolio of community water projects; supervised design and construction of over 120 rural water schemes across 15 counties.</div>
+          <div class="desc">Managed a portfolio of community water projects; supervised design and construction of over 120 rural water schemes across 15 counties.</div>
         </div>
         <div class="timeline-item">
           <div class="period">2005 – 2012</div>
@@ -159,19 +190,14 @@
         </div>
         <h3 style="margin-top:2rem;">Core Competencies</h3>
         <div class="skills-grid">
-          <div class="skill-tag">Water Systems Design</div>
-          <div class="skill-tag">Project Management</div>
-          <div class="skill-tag">Policy Formulation</div>
-          <div class="skill-tag">GIS &amp; Remote Sensing</div>
-          <div class="skill-tag">Stakeholder Engagement</div>
-          <div class="skill-tag">Budget &amp; Procurement</div>
-          <div class="skill-tag">AutoCAD / Civil 3D</div>
-          <div class="skill-tag">WASH Standards</div>
+          <div class="skill-tag">Water Systems Design</div><div class="skill-tag">Project Management</div>
+          <div class="skill-tag">Policy Formulation</div><div class="skill-tag">GIS &amp; Remote Sensing</div>
+          <div class="skill-tag">Stakeholder Engagement</div><div class="skill-tag">Budget &amp; Procurement</div>
+          <div class="skill-tag">AutoCAD / Civil 3D</div><div class="skill-tag">WASH Standards</div>
         </div>
         <div class="cv-download">
-          <!-- Place Eng. Alima's CV PDF in the repo root and update this link -->
-          <a href="samuel-alima-cv.pdf" class="btn-primary" download>
-            ⬇ Download Full CV (PDF)
+          <a id="cv-download-btn" href="#" class="btn-primary" style="opacity:.45;pointer-events:none;display:inline-block;">
+            ⬇ CV Not Uploaded Yet
           </a>
         </div>
       </div>
@@ -179,24 +205,20 @@
   </div>
 </section>
 
-<!-- ── PROJECTS ────────────────────────────────────────────────────────────── -->
 <section id="projects">
   <div class="section-inner">
     <span class="section-tag">Projects Portfolio</span>
     <h2 class="section-title">Water Infrastructure Interventions</h2>
     <p class="section-subtitle">National and county-level projects championed under the leadership of Eng. Samuel Alima.</p>
     <div class="projects-controls">
-      <button class="filter-btn active" onclick="filterProjects('all', this)">All Projects</button>
-      <button class="filter-btn" onclick="filterProjects('national', this)">National</button>
-      <button class="filter-btn" onclick="filterProjects('county', this)">County Level</button>
+      <button class="filter-btn active" onclick="filterProjects('all',this)">All Projects</button>
+      <button class="filter-btn" onclick="filterProjects('national',this)">National</button>
+      <button class="filter-btn" onclick="filterProjects('county',this)">County Level</button>
     </div>
-    <div id="projects-grid">
-      <p style="color:var(--txt-mute);padding:2rem;text-align:center;">Loading projects…</p>
-    </div>
+    <div id="projects-grid"><p style="color:var(--txt-mute);padding:2rem;text-align:center;">Loading projects…</p></div>
   </div>
 </section>
 
-<!-- ── CONTACT ─────────────────────────────────────────────────────────────── -->
 <section id="contact">
   <div class="section-inner">
     <div class="contact-grid">
@@ -205,31 +227,16 @@
         <h2 class="section-title">Contact the Office</h2>
         <p class="section-subtitle">For official correspondence, project inquiries, or stakeholder engagements.</p>
         <div class="contact-item">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-          </div>
-          <div>
-            <div class="lbl">Office Address</div>
-            <div class="val">Maji House, Ngong Road, Nairobi, Kenya<br>P.O. Box 30521-00100 Nairobi</div>
-          </div>
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+          <div><div class="lbl">Office Address</div><div class="val">Maji House, Ngong Road, Nairobi, Kenya<br>P.O. Box 30521-00100 Nairobi</div></div>
         </div>
         <div class="contact-item">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-          </div>
-          <div>
-            <div class="lbl">Email</div>
-            <div class="val">ps.water@environment.go.ke</div>
-          </div>
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+          <div><div class="lbl">Email</div><div class="val">ps.water@environment.go.ke</div></div>
         </div>
         <div class="contact-item">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-          </div>
-          <div>
-            <div class="lbl">Phone</div>
-            <div class="val">+254 (0)20 272 9200</div>
-          </div>
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+          <div><div class="lbl">Phone</div><div class="val">+254 (0)20 272 9200</div></div>
         </div>
       </div>
       <div>
@@ -243,12 +250,11 @@
   </div>
 </section>
 
-<!-- ── FOOTER ──────────────────────────────────────────────────────────────── -->
 <footer>
   <p>&copy; <span id="footer-year"></span> <strong>Engineer Samuel Alima</strong> — Principal Secretary, Ministry of Water &amp; Sanitation, Republic of Kenya. All rights reserved.</p>
 </footer>
 
-<!-- ── LOGIN OVERLAY ───────────────────────────────────────────────────────── -->
+<!-- LOGIN -->
 <div id="login-overlay">
   <div class="login-box">
     <h3>Admin Access</h3>
@@ -260,7 +266,7 @@
   </div>
 </div>
 
-<!-- ── ADMIN PANEL ─────────────────────────────────────────────────────────── -->
+<!-- ADMIN PANEL -->
 <div id="admin-overlay">
   <div class="admin-panel">
     <div class="admin-header">
@@ -272,59 +278,32 @@
     </div>
     <div class="admin-body">
       <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="add-project"      onclick="switchTab('add-project')">Add Project</button>
-        <button class="admin-tab"        data-tab="manage-projects"  onclick="switchTab('manage-projects')">Manage Projects</button>
-        <button class="admin-tab"        data-tab="upload-photo"     onclick="switchTab('upload-photo')">Profile Photo</button>
+        <button class="admin-tab active" data-tab="add-project"     onclick="switchTab('add-project')">➕ Add Project</button>
+        <button class="admin-tab"        data-tab="manage-projects" onclick="switchTab('manage-projects')">📋 Manage</button>
+        <button class="admin-tab"        data-tab="upload-cv"       onclick="switchTab('upload-cv')">📄 CV</button>
+        <button class="admin-tab"        data-tab="upload-photo"    onclick="switchTab('upload-photo')">📷 Photo</button>
       </div>
 
       <!-- ADD PROJECT -->
       <div class="admin-pane active" id="pane-add-project">
         <div class="form-row">
-          <div class="form-group">
-            <label>Project Name *</label>
-            <input type="text" id="proj-name" placeholder="e.g. Thwake Dam Project">
-          </div>
-          <div class="form-group">
-            <label>Level *</label>
-            <select id="proj-level">
-              <option value="national">National</option>
-              <option value="county">County Level</option>
-            </select>
-          </div>
+          <div class="form-group"><label>Project Name *</label><input type="text" id="proj-name" placeholder="e.g. Thwake Dam Project"></div>
+          <div class="form-group"><label>Level *</label><select id="proj-level"><option value="national">National</option><option value="county">County Level</option></select></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>County / Region</label>
-            <input type="text" id="proj-county" placeholder="e.g. Makueni / National">
-          </div>
-          <div class="form-group">
-            <label>Year</label>
-            <input type="text" id="proj-year" placeholder="e.g. 2023–2025">
-          </div>
+          <div class="form-group"><label>County / Region</label><input type="text" id="proj-county" placeholder="e.g. Makueni / Countrywide"></div>
+          <div class="form-group"><label>Year</label><input type="text" id="proj-year" placeholder="e.g. 2023–2025"></div>
         </div>
-        <div class="form-group">
-          <label>Description *</label>
-          <textarea id="proj-desc" placeholder="Describe the project scope, beneficiaries, and impact…"></textarea>
-        </div>
+        <div class="form-group"><label>Description *</label><textarea id="proj-desc" placeholder="Describe the project scope, beneficiaries, and impact…"></textarea></div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Budget (KES)</label>
-            <input type="text" id="proj-budget" placeholder="e.g. KES 2.4 Billion">
-          </div>
-          <div class="form-group">
-            <label>Status</label>
-            <select id="proj-status">
-              <option value="Completed">Completed</option>
-              <option value="Ongoing">Ongoing</option>
-              <option value="Planning">Planning</option>
-            </select>
-          </div>
+          <div class="form-group"><label>Budget (KES)</label><input type="text" id="proj-budget" placeholder="e.g. KES 2.4 Billion"></div>
+          <div class="form-group"><label>Status</label><select id="proj-status"><option value="Completed">Completed</option><option value="Ongoing">Ongoing</option><option value="Planning">Planning</option></select></div>
         </div>
         <div class="form-group">
-          <label>Project Photos</label>
+          <label>Project Photos <span style="color:var(--txt-mute);font-weight:400;font-size:.8rem;">(optional — can be added later via Edit)</span></label>
           <div class="img-upload-area" onclick="document.getElementById('proj-imgs').click()">
-            <input type="file" id="proj-imgs" accept="image/*" multiple onchange="previewProjectImages(event)">
-            <p>📷 Click to upload project photos (up to 10 images)</p>
+            <input type="file" id="proj-imgs" accept="image/*" multiple onchange="previewProjectImages(event)" style="display:none;">
+            <p>📷 Click to upload project photos</p>
           </div>
           <div class="img-preview-list" id="proj-img-previews"></div>
         </div>
@@ -334,25 +313,39 @@
 
       <!-- MANAGE PROJECTS -->
       <div class="admin-pane" id="pane-manage-projects">
+        <p style="font-size:.85rem;color:var(--txt-mute);margin-bottom:1rem;">Click <strong>✏ Edit</strong> to update details, status, or add/remove photos for any project.</p>
         <div id="project-manage-list"></div>
-        <p id="no-proj-msg" style="color:var(--txt-mute);text-align:center;padding:2rem;display:none;">
-          No projects yet. Add your first project using the Add Project tab.
-        </p>
+        <p id="no-proj-msg" style="color:var(--txt-mute);text-align:center;padding:2rem;display:none;">No projects yet. Use the Add Project tab.</p>
+      </div>
+
+      <!-- CV UPLOAD -->
+      <div class="admin-pane" id="pane-upload-cv">
+        <p style="color:var(--txt-mid);margin-bottom:1rem;font-size:.9rem;">Upload Eng. Alima's CV as a PDF. Visitors will see a <strong>Download Full CV</strong> button activated in the CV section.</p>
+        <div class="cv-current-wrap" id="cv-current-wrap">
+          <div class="cv-icon">📄</div>
+          <div class="cv-info">
+            <div class="cv-name" id="cv-filename">CV File</div>
+            <div class="cv-hint">Currently active — visitors can download this</div>
+          </div>
+          <button class="cv-del-btn" onclick="deleteCV()">🗑 Remove</button>
+        </div>
+        <div class="img-upload-area" onclick="document.getElementById('cv-upload-input').click()" style="border-color:var(--blue-200);">
+          <input type="file" id="cv-upload-input" accept="application/pdf" onchange="uploadCV(event)" style="display:none;">
+          <p>📄 Click to upload CV (PDF only, max 10 MB)</p>
+        </div>
+        <div id="cv-upload-feedback" style="display:none;margin-top:.8rem;text-align:center;font-size:.9rem;font-weight:600;"></div>
       </div>
 
       <!-- PROFILE PHOTO -->
       <div class="admin-pane" id="pane-upload-photo">
-        <p style="color:var(--txt-mid);margin-bottom:1.2rem;font-size:.9rem;">
-          Upload an official portrait of Eng. Samuel Alima to display in the homepage hero section.
-          The photo is stored in your browser and persists across visits.
-        </p>
+        <p style="color:var(--txt-mid);margin-bottom:1.2rem;font-size:.9rem;">Upload an official portrait to display in the homepage hero section.</p>
         <div class="img-upload-area" onclick="document.getElementById('hero-photo-upload').click()">
-          <input type="file" id="hero-photo-upload" accept="image/*" onchange="uploadProfilePhoto(event)">
+          <input type="file" id="hero-photo-upload" accept="image/*" onchange="uploadProfilePhoto(event)" style="display:none;">
           <p>📷 Click to select a portrait photo (JPG / PNG / WEBP)</p>
         </div>
         <div id="hero-photo-preview-wrap" style="margin-top:1rem;text-align:center;display:none;">
-          <img id="hero-photo-preview" src="" alt="Preview"
-               style="max-width:200px;border-radius:8px;border:2px solid var(--border);">
+          <img id="hero-photo-preview" src="" alt="Preview" style="max-width:180px;border-radius:8px;border:2px solid var(--border);">
+          <p style="color:#0f6e56;font-size:.85rem;margin-top:.5rem;font-weight:600;">✓ Photo is live on the homepage</p>
         </div>
         <div id="photo-upload-feedback" style="display:none;margin-top:.8rem;text-align:center;font-size:.9rem;font-weight:600;"></div>
       </div>
@@ -360,23 +353,45 @@
   </div>
 </div>
 
-<!-- ── EXTRA STYLES for admin list ────────────────────────────────────────── -->
-<style>
-.project-list-item { display:flex; align-items:center; gap:1rem; padding:.8rem; border:1px solid var(--border); border-radius:8px; margin-bottom:.6rem; background:var(--blue-50); }
-.pli-name { flex:1; font-size:.9rem; font-weight:500; color:var(--blue-800); }
-.pli-badge { font-size:.72rem; padding:.2rem .6rem; border-radius:3px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
-.pli-badge.national { background:var(--gold-lt); color:var(--blue-900); }
-.pli-badge.county   { background:var(--blue-100); color:var(--blue-800); }
-.pli-del-btn { background:none; border:1px solid #f09595; border-radius:4px; padding:.3rem .7rem; color:#a32d2d; font-size:.78rem; cursor:pointer; transition:.2s; }
-.pli-del-btn:hover { background:#fcebeb; }
-.feedback-ok  { color:#0f6e56; font-weight:600; font-size:.9rem; text-align:center; }
-.feedback-err { color:#a32d2d; font-weight:600; font-size:.9rem; text-align:center; }
-.admin-header-right { display:flex; gap:.8rem; align-items:center; }
-.logout-btn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:rgba(255,255,255,.8); padding:.3rem .8rem; border-radius:4px; font-size:.8rem; cursor:pointer; font-family:'Source Sans 3',sans-serif; }
-.logout-btn:hover { background:rgba(255,255,255,.2); }
-</style>
+<!-- EDIT PROJECT MODAL -->
+<div id="edit-modal-overlay">
+  <div class="edit-modal">
+    <div class="edit-modal-header">
+      <h3>✏ Edit Project</h3>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Project Name *</label><input type="text" id="edit-proj-name"></div>
+        <div class="form-group"><label>Level *</label><select id="edit-proj-level"><option value="national">National</option><option value="county">County Level</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>County / Region</label><input type="text" id="edit-proj-county"></div>
+        <div class="form-group"><label>Year</label><input type="text" id="edit-proj-year"></div>
+      </div>
+      <div class="form-group"><label>Description *</label><textarea id="edit-proj-desc"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Budget (KES)</label><input type="text" id="edit-proj-budget"></div>
+        <div class="form-group"><label>Status</label><select id="edit-proj-status"><option value="Completed">Completed</option><option value="Ongoing">Ongoing</option><option value="Planning">Planning</option></select></div>
+      </div>
+      <div class="form-group">
+        <span class="existing-imgs-label">Current Photos <span style="color:var(--txt-mute);font-weight:400;">(click ✕ to remove individual photos)</span></span>
+        <div id="edit-existing-imgs"></div>
+      </div>
+      <div class="form-group">
+        <label>Add New Photos <span style="color:var(--txt-mute);font-weight:400;font-size:.8rem;">(added to existing photos)</span></label>
+        <div class="img-upload-area" onclick="document.getElementById('edit-proj-imgs').click()">
+          <input type="file" id="edit-proj-imgs" accept="image/*" multiple onchange="previewEditImages(event)" style="display:none;">
+          <p>📷 Click to upload additional photos for this project</p>
+        </div>
+        <div class="img-preview-list" id="edit-new-previews"></div>
+      </div>
+      <button class="admin-save-btn" id="save-edit-btn" onclick="saveEdit()">💾 Save Changes</button>
+      <div id="edit-feedback" style="display:none;margin-top:.8rem;"></div>
+    </div>
+  </div>
+</div>
 
-<!-- ── SCRIPT ──────────────────────────────────────────────────────────────── -->
 <script src="js/main.js"></script>
 </body>
 </html>
