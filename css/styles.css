@@ -30,21 +30,32 @@ body  { font-family: 'Source Sans 3', sans-serif; background: var(--blue-50); co
 nav {
   position: fixed; inset: 0 0 auto; z-index: 1000;
   background: rgba(7,40,64,.96); backdrop-filter: blur(12px);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 2.5rem; height: 64px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 2.5rem; height: 68px;
   border-bottom: 1px solid rgba(200,168,75,.3);
 }
-.nav-logo { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.1rem; font-weight:700; letter-spacing:.03em; }
-.nav-links { display:flex; gap:2rem; list-style:none; }
-.nav-links a { color:rgba(255,255,255,.85); text-decoration:none; font-size:.9rem; font-weight:500; letter-spacing:.04em; transition:color .2s; }
-.nav-links a:hover { color:var(--gold); }
-#nav-admin-btn {
-  background:var(--gold); color:var(--blue-900); border:none;
-  padding:.45rem 1.2rem; border-radius:4px;
-  font-family:'Source Sans 3',sans-serif; font-size:.85rem; font-weight:600;
-  letter-spacing:.04em; cursor:pointer; transition:background .2s;
+.nav-logo { display: none; }
+.nav-links {
+  display: flex; gap: 0; list-style: none;
+  width: 100%; justify-content: space-around;
 }
-#nav-admin-btn:hover { background:#d4b05a; }
+.nav-links a {
+  color: rgba(255,255,255,.9); text-decoration: none;
+  font-size: 1.2rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  transition: color .2s;
+  position: relative; padding-bottom: 4px;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--gold);
+  transform: scaleX(0); transition: transform .2s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-right { display: none; }
+#nav-admin-btn { display: none; }
 
 /* ── HERO ─────────────────────────────────────────────────────────────────── */
 #hero {
@@ -302,8 +313,9 @@ footer strong { color:var(--gold); }
   .form-row { grid-template-columns:1fr; }
 }
 @media(max-width:600px) {
-  nav { padding:0 1.2rem; }
+  nav { padding:0 1.2rem; grid-template-columns:1fr auto; }
   .nav-links { display:none; }
+  .nav-right { display:none; }
   section { padding:60px 1.2rem; }
   #hero { padding:90px 1.2rem 50px; }
   .hero-stats { gap:1.5rem; }
